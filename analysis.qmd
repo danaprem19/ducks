@@ -1,4 +1,34 @@
 ---
 title: "Mallard Duck Movement"
 author: "Dana Prem"
+execute:
+  echo: false
 ---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(sf)
+```
+
+```{r}
+#| cache: true
+mallards <- readRDS("data/mallards.rds")
+```
+
+```{r}
+fixes_per_duck <- mallards |>
+  count(duck_id, name = "gps_fixes", sort = TRUE)
+
+fixes_per_duck
+```
+
+```{r}
+mallards |>
+  summarise(
+    min_latitude = min(lat, na.rm = TRUE),
+    max_latitude = max(lat, na.rm = TRUE),
+    min_longitude = min(long, na.rm = TRUE),
+    max_longitude = max(long, na.rm = TRUE)
+  )
+```

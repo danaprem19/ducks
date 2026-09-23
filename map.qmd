@@ -1,0 +1,37 @@
+---
+title: "Mallard Duck Movement"
+author: "Dana Prem"
+execute:
+  echo: false
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(sf)
+```
+
+```{r}
+#| cache: true
+mallards <- readRDS("data/mallards.rds")
+```
+
+```{r}
+mallards_sf <- mallards |>
+  filter(
+    between(lat, 46, 55),
+    between(long, 7, 25)
+  ) |>
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+world <- rnaturalearth::ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+)
+
+ggplot() +
+  geom_sf(data = world, fill = "grey90", color = "grey60") +
+  geom_sf(data = mallards_sf, aes(color = duck_id), alpha = 0.6, size = 0.5) +
+  coord_sf(xlim = c(7, 25), ylim = c(46, 55), expand = FALSE) +
+  theme_minimal()
+```
